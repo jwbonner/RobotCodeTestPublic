@@ -1,0 +1,41 @@
+name: Copy to Public
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "32 6 * * *" # 6:32(.8) AM UTC
+
+jobs:
+  build:
+    name: Copy to Public
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private repository
+        uses: actions/checkout@v4
+        with:
+          repository: jwbonner/RobotCodeTest
+          path: code-private
+      - name: Checkout public repository
+        uses: actions/checkout@v4
+        with:
+          repository: jwbonner/RobotCodeTestPublic
+          path: code-public
+      - name: Configure credentials
+        run: |
+          git config --global user.email "github@littletonrobotics.org"
+          git config --global user.name "Mechanical-Advantage-Bot"
+      - name: Copy files to public
+        run: |
+          rsync -av --delete code-private/ code-public --exclude .git
+      - name: Create public commit
+        working-directory: code-public
+        run: |
+          git add -A
+          git commit -m "Publish on `date -I`"
+      - name: Push public commit
+        working-directory: code-public
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          git config --unset-all http.https://github.com/.extraheader
+          git push --set-upstream https://Mechanical-Advantage-Bot:$GITHUB_TOKEN@github.com/jwbonner/RobotCodeTestPublic main

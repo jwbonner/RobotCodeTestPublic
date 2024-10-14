@@ -33,7 +33,7 @@ jobs:
         working-directory: code-public
         run: |
           git add -A
-          git commit -m "Publish on `date -I`"
+          git diff-index --quiet HEAD || git commit -m "Publish on `date -I`"
       - name: Push public commit
         working-directory: code-public
         env:

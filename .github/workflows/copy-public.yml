@@ -26,6 +26,8 @@ jobs:
           git config --global user.name "Mechanical-Advantage-Bot"
       - name: Copy files to public
         run: |
+          rm code-private/README.md
+          mv code-private/README-Public.md code-private/README.md
           rsync -av --delete code-private/ code-public --exclude .git
       - name: Create public commit
         working-directory: code-public

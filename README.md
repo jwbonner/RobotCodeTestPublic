@@ -1,3 +1,3 @@
-# RobotCodeTest
+# RobotCodeTest (Public)
 
-This is a test repository. Hello world!
+This is the public README.

@@ -3,7 +3,7 @@ name: Copy to Public
 on:
   workflow_dispatch:
   schedule:
-    - cron: "32 6 * * *" # 6:32(.8) AM UTC
+    - cron: "32 6 * * *" # 6:32(:08) AM UTC
 
 jobs:
   build:
@@ -28,6 +28,8 @@ jobs:
         run: |
           rm code-private/README.md
           mv code-private/README-Public.md code-private/README.md
+          mv code-private/.github/workflows code-private/.github/workflows_private
+          mv code-private/.github/workflows_public code-private/.github/workflows
           rsync -av --delete code-private/ code-public --exclude .git
       - name: Create public commit
         working-directory: code-public
